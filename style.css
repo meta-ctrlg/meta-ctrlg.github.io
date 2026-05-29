@@ -78,7 +78,13 @@ h2 {
 }
 
 /* ---------- hero ---------- */
-.hero { text-align: center; padding-top: 56px; padding-bottom: 30px; }
+.hero {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  text-align: center;
+  padding: 56px 22px 30px;
+}
+.hero figure { max-width: 760px; margin-left: auto; margin-right: auto; }
 .hero h1 {
   font-size: 40px;
   margin: 0 0 6px;

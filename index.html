@@ -165,7 +165,7 @@
 
   <div class="eqn-block">
     <div class="eqn-head">1 &middot; Constrained decoding as probabilistic reasoning (Ctrl-G)</div>
-    $$ p_{\mathrm{LM}}(x_t \mid x_{<t}, \alpha)\;\propto\;p_{\mathrm{LM}}(x_t \mid x_{<t})\;\cdot\;p_{\mathrm{LM}}(\alpha \mid x_{\le t}) $$
+    $$ p_{\mathrm{LM}}(x_t \mid x_{\lt t}, \alpha)\;\propto\;p_{\mathrm{LM}}(x_t \mid x_{\lt t})\;\cdot\;p_{\mathrm{LM}}(\alpha \mid x_{\le t}) $$
     <p class="eqn-note">
       The second factor is the probability that the <em>full</em> sequence will satisfy the
       constraint &alpha; given the current prefix. It assigns zero mass to tokens with no valid
@@ -176,7 +176,7 @@
 
   <div class="eqn-block">
     <div class="eqn-head">2 &middot; Tractable lookahead via an HMM and a DFA</div>
-    $$ p_{\mathrm{ctrl}}(x_t \mid x_{<t}, \alpha)\;\propto\;p_{\mathrm{LM}}(x_t \mid x_{<t})\;\cdot\;p_{\mathrm{HMM}}(\alpha \mid x_{\le t}) $$
+    $$ p_{\mathrm{ctrl}}(x_t \mid x_{\lt t}, \alpha)\;\propto\;p_{\mathrm{LM}}(x_t \mid x_{\lt t})\;\cdot\;p_{\mathrm{HMM}}(\alpha \mid x_{\le t}) $$
     <p class="eqn-note">
       The exact lookahead is intractable, so &alpha; is compiled to a DFA \(\mathcal{D}_\alpha\)
       and approximated by a trained HMM. Their product is finite-state, admitting a backward

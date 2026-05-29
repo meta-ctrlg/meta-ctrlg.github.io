@@ -221,43 +221,6 @@ figcaption b { color: var(--ink); }
 .eqn-note { font-size: 15px; color: var(--muted); margin: 6px 0 0; }
 .eqn-note b { color: var(--ink); }
 
-/* ---------- formulation diagram (recreated Fig. 2) ---------- */
-.diagram { margin: 6px 0 28px; }
-.dgm {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: #fff;
-  box-shadow: var(--shadow);
-  padding: 20px 20px 16px;
-}
-.dgm-tier { display: flex; align-items: center; gap: 14px; }
-.dgm-tier + .dgm-tier { margin-top: 10px; }
-.dgm-name {
-  flex: 0 0 54px; width: 54px; text-align: right;
-  font-size: 12.5px; font-weight: 700; color: var(--muted);
-}
-.dgm-toks { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
-.dgm-toks .tok {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 12px; line-height: 1;
-  background: var(--bg-soft2); border: 1px solid #d6e0fb;
-  border-radius: 4px; padding: 5px 6px; color: var(--ink);
-}
-.dgm-toks .dots { color: var(--muted); font-size: 13px; padding-left: 2px; }
-.dgm-metas { display: flex; flex-wrap: wrap; gap: 10px; }
-.dgm-metas .meta {
-  background: var(--bg-soft); border: 1px solid #86efac;
-  border-radius: 9px; padding: 8px 14px; min-width: 96px;
-  text-align: center; font-size: 12.5px; color: #166534;
-}
-.dgm-metas .meta b { display: block; font-size: 13.5px; color: #14532d; letter-spacing: .02em; }
-.dgm-proj {
-  font-size: 12.5px; font-weight: 600; color: var(--green);
-  padding-left: 70px; margin: 8px 0 4px;
-}
-.dgm-proj::before { content: "\2193  "; }
-.dgm-dfa { width: 100%; max-width: 540px; height: auto; }
-
 /* ---------- tables ---------- */
 .table-wrap { overflow-x: auto; margin-top: 10px; border-radius: var(--radius); border: 1px solid var(--line); }
 table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 540px; }

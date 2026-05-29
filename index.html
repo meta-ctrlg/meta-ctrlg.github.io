@@ -10,6 +10,13 @@
 <meta property="og:image" content="assets/teaser.png" />
 <meta property="og:type" content="website" />
 <link rel="stylesheet" href="style.css" />
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] },
+    options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
@@ -20,6 +27,7 @@
     <div class="nav-links">
       <a href="#abstract">Abstract</a>
       <a href="#method">Method</a>
+      <a href="#formulation">Formulation</a>
       <a href="#results">Results</a>
       <a href="#robot">Real Robot</a>
     </div>
@@ -144,6 +152,63 @@
   <p class="tnote" style="margin-left:auto;margin-right:auto;text-align:center;">
     ~1,900&times; faster &middot; ~67,000&times; less memory &middot; ~16.7&times; better fit.
   </p>
+</section>
+
+<!-- ================= FORMULATION ================= -->
+<section id="formulation">
+  <h2>Formulation</h2>
+  <p class="section-sub">
+    A plan must satisfy a token-level syntactic constraint &gamma; and an action-level semantic
+    constraint &beta;. The four steps below take Meta-Ctrl from probabilistic reweighting to an
+    exact two-level factorization.
+  </p>
+
+  <div class="eqn-block">
+    <div class="eqn-head">1 &middot; Constrained decoding as probabilistic reasoning (Ctrl-G)</div>
+    $$ p_{\mathrm{LM}}(x_t \mid x_{<t}, \alpha)\;\propto\;p_{\mathrm{LM}}(x_t \mid x_{<t})\;\cdot\;p_{\mathrm{LM}}(\alpha \mid x_{\le t}) $$
+    <p class="eqn-note">
+      The second factor is the probability that the <em>full</em> sequence will satisfy the
+      constraint &alpha; given the current prefix. It assigns zero mass to tokens with no valid
+      completion&mdash;so satisfaction is <b>guaranteed</b>&mdash;and among valid tokens prefers
+      those leading to fluent, high-probability completions.
+    </p>
+  </div>
+
+  <div class="eqn-block">
+    <div class="eqn-head">2 &middot; Tractable lookahead via an HMM and a DFA</div>
+    $$ p_{\mathrm{ctrl}}(x_t \mid x_{<t}, \alpha)\;\propto\;p_{\mathrm{LM}}(x_t \mid x_{<t})\;\cdot\;p_{\mathrm{HMM}}(\alpha \mid x_{\le t}) $$
+    <p class="eqn-note">
+      The exact lookahead is intractable, so &alpha; is compiled to a DFA \(\mathcal{D}_\alpha\)
+      and approximated by a trained HMM. Their product is finite-state, admitting a backward
+      dynamic program that returns the lookahead for every prefix at cost
+      \(O(n\cdot|\mathcal{D}|\cdot H^2)\). Composing constraints multiplies DFA sizes
+      (\(|\mathcal{D}_1|\cdot|\mathcal{D}_2|\))&mdash;the bottleneck Meta-Ctrl removes.
+    </p>
+  </div>
+
+  <div class="eqn-block">
+    <div class="eqn-head">3 &middot; Two levels via meta-tokens</div>
+    $$ x \models \alpha \;\iff\; (x \models \gamma)\;\wedge\;(\tau(x) \models \beta) $$
+    <p class="eqn-note">
+      A parser \(\tau\) maps each syntactically valid token sequence to its sequence of grounded
+      actions (<em>meta-tokens</em>, e.g.&nbsp;<span class="mono">Open(dishwasher)</span>);
+      &beta; is a DFA <em>over meta-tokens</em> tracking preconditions, ordering, and goal
+      progress. On the &gamma;-valid support, \(\tau\) is a bijection (one canonical tokenization
+      per action sequence).
+    </p>
+  </div>
+
+  <div class="eqn-block">
+    <div class="eqn-head">4 &middot; Exact factorization</div>
+    $$ p(\alpha \mid x_{\le t}) = \sum_{a_l} \underbrace{p(a_l \mid x_{\le t})}_{\text{bridging}}\;\cdot\;\underbrace{p(\gamma \mid x_{\le t}, a_l)}_{\text{syntax (tokens)}}\;\cdot\;\underbrace{p_{\mathrm{meta}}(\beta \mid a_{\le l})}_{\text{semantics (actions)}} $$
+    <p class="eqn-note">
+      Bijectivity of \(\tau\) makes the semantics term depend only on the completed-action prefix
+      \(a_{\le l}\), so syntax (token level) and semantics (action level) <b>decouple exactly</b>,
+      communicating only through the bridging term \(p(a_l \mid x_{\le t})\). Each level becomes
+      an independent backward DP&mdash;an <em>additive</em> state space instead of a multiplicative
+      one, the source of the ~1,900&times; compute and ~67,000&times; memory savings.
+    </p>
+  </div>
 </section>
 
 <!-- ================= RESULTS ================= -->

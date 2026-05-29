@@ -200,6 +200,27 @@ figcaption b { color: var(--ink); }
 .step p { margin: 0; font-size: 15.5px; color: var(--muted); }
 .step .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 13.5px; color: var(--ink); }
 
+/* ---------- equation blocks ---------- */
+.eqn-block {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--blue);
+  border-radius: var(--radius);
+  padding: 18px 22px 14px;
+  margin: 16px 0;
+}
+.eqn-head {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--blue-dark);
+  margin-bottom: 2px;
+}
+.eqn-block mjx-container { overflow-x: auto; overflow-y: hidden; max-width: 100%; padding: 2px 0; }
+.eqn-note { font-size: 15px; color: var(--muted); margin: 6px 0 0; }
+.eqn-note b { color: var(--ink); }
+
 /* ---------- tables ---------- */
 .table-wrap { overflow-x: auto; margin-top: 10px; border-radius: var(--radius); border: 1px solid var(--line); }
 table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 540px; }

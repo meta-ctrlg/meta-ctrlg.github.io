@@ -22,7 +22,6 @@
       <a href="#method">Method</a>
       <a href="#results">Results</a>
       <a href="#robot">Real Robot</a>
-      <a href="#analysis">Analysis</a>
     </div>
   </div>
 </nav>
@@ -91,7 +90,7 @@
     <div class="card">
       <div class="big">8B &gt; GPT-4o</div>
       <div class="lbl">Small model, big results</div>
-      <p class="desc">On VirtualHome action sequencing an 8B open model surpasses every EAI leaderboard entry, including Llama-3-70B and frontier closed models.</p>
+      <p class="desc">On VirtualHome action sequencing, Llama-3-8B goes from 21.3 to <b>88.7</b> task SR&mdash;past every EAI leaderboard entry, including Llama-3-70B and frontier closed models.</p>
     </div>
   </div>
 </section>
@@ -128,16 +127,6 @@
     </div>
   </div>
 
-  <figure class="fig-narrow">
-    <img src="assets/hmm_histograms.png" alt="Meta-token HMM fits action sequences far better than a token-level HMM." />
-    <figcaption>
-      <b>A better surrogate.</b> Because syntax is handled at Level&nbsp;1, the action-level HMM
-      spends its capacity on action semantics rather than token formatting&mdash;an
-      ~16.7&times; better per-action fit (&minus;log&nbsp;p/action of 2.01 vs 33.54). A more
-      accurate surrogate yields higher-quality plans among the constraint-satisfying set.
-    </figcaption>
-  </figure>
-
   <div class="table-wrap" style="margin-top:28px;">
     <table>
       <caption>Why two levels: factoring the joint constraint is both cheaper and a better surrogate (median VirtualHome task, hidden size H=128).</caption>
@@ -161,123 +150,120 @@
 <section id="results">
   <h2>Results</h2>
   <p class="section-sub">
-    Embodied Agent Interface (VirtualHome). An 8B open-weight model with Meta-Ctrl surpasses
-    every leaderboard entry, including models an order of magnitude larger.
+    On the Embodied Agent Interface, Meta-Ctrl lifts open-weight LMs to match or exceed
+    frontier closed models; on WAH-NL it turns an unusable LM into a deployable planner.
   </p>
 
   <div class="table-wrap">
     <table>
-      <caption>EAI VirtualHome &mdash; success rate (%). Best in each column in green.</caption>
+      <caption>Embodied Agent Interface &mdash; VirtualHome (VH; n=342 AS, 338 SD) and BEHAVIOR (BEH; n=100 AS, 100 SD). Task SR / Execution SR (%). Leaderboard baselines from Li et&nbsp;al.; each base LM is grouped with its full Meta-Ctrl (&gamma;+&beta;) result. Best per column in green.</caption>
       <thead>
         <tr>
-          <th rowspan="2">Model</th>
-          <th colspan="2">Action Sequencing</th>
-          <th colspan="2">Subgoal Decomposition</th>
+          <th rowspan="3">Model</th>
+          <th colspan="4">Action Sequencing</th>
+          <th colspan="4">Subgoal Decomposition</th>
         </tr>
         <tr>
-          <th>Task SR</th><th>Exec SR</th><th>Task SR</th><th>Exec SR</th>
+          <th colspan="2">Task SR</th><th colspan="2">Exec SR</th>
+          <th colspan="2">Task SR</th><th colspan="2">Exec SR</th>
+        </tr>
+        <tr>
+          <th>VH</th><th>BEH</th><th>VH</th><th>BEH</th>
+          <th>VH</th><th>BEH</th><th>VH</th><th>BEH</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>GPT-3.5-turbo</td><td>24.9</td><td>40.7</td><td>69.2</td><td>81.4</td></tr>
-        <tr><td>GPT-4o</td><td>71.5</td><td>81.3</td><td>87.6</td><td>91.1</td></tr>
-        <tr><td>o1-preview</td><td>65.2</td><td>72.5</td><td>89.4</td><td>93.2</td></tr>
-        <tr><td>Claude-3.5 Sonnet</td><td>76.1</td><td>81.3</td><td>89.1</td><td>92.0</td></tr>
-        <tr><td>Gemini 1.5 Pro</td><td>76.7</td><td>83.6</td><td>87.0</td><td>91.1</td></tr>
-        <tr><td>Mistral Large</td><td>78.4</td><td>84.6</td><td>84.3</td><td>92.0</td></tr>
-        <tr><td>Llama 3 70B Instruct</td><td>59.0</td><td>66.6</td><td>78.4</td><td>87.3</td></tr>
-        <tr class="group-row"><td colspan="5">Ctrl-G &mdash; Llama 3 8B Instruct base</td></tr>
-        <tr class="row-base"><td>Llama 3 8B Instruct</td><td>21.3</td><td>23.6</td><td>48.8</td><td>58.0</td></tr>
-        <tr class="row-base"><td>+ Syntax Ctrl-G (&gamma;)</td><td>48.7</td><td>51.5</td><td>60.1</td><td>79.0</td></tr>
-        <tr class="row-ours"><td>+ Semantic Meta-Ctrl (&gamma;+&beta;)</td><td class="best">85.3</td><td class="best">91.8</td><td>79.8</td><td>82.5</td></tr>
+        <tr class="group-row"><td colspan="9">Representative baselines</td></tr>
+        <tr><td>GPT-4o</td><td>71.5</td><td>47.0</td><td>81.3</td><td>53.0</td><td>87.6</td><td>49.0</td><td>91.1</td><td>55.0</td></tr>
+        <tr><td>Claude-3.5 Sonnet</td><td>76.1</td><td>60.0</td><td>81.3</td><td>69.0</td><td>89.1</td><td>39.0</td><td>92.0</td><td>44.0</td></tr>
+        <tr><td>o1-preview</td><td>65.2</td><td class="best">81.0</td><td>72.5</td><td class="best">91.0</td><td>89.4</td><td class="best">60.0</td><td class="best">93.2</td><td>62.0</td></tr>
+        <tr><td>Mistral Large</td><td>78.4</td><td>33.0</td><td>84.6</td><td>50.0</td><td>84.3</td><td>31.0</td><td>92.0</td><td>38.0</td></tr>
+        <tr><td>Llama 3 70B Instruct</td><td>59.0</td><td>34.0</td><td>66.6</td><td>42.0</td><td>78.4</td><td>21.0</td><td>87.3</td><td>30.0</td></tr>
+        <tr class="row-base"><td>Llama 3 8B Instruct (base)</td><td>21.3</td><td>10.0</td><td>23.6</td><td>16.0</td><td>48.8</td><td>22.0</td><td>58.0</td><td>29.0</td></tr>
+        <tr class="row-ours"><td>&nbsp;&nbsp;+ Meta-Ctrl (ours)</td><td class="best">88.7</td><td>34.0</td><td class="best">95.7</td><td>64.0</td><td class="best">88.2</td><td>36.0</td><td>92.0</td><td>53.0</td></tr>
+        <tr class="row-base"><td>gpt-oss-20B (base)</td><td>74.4</td><td>40.0</td><td>80.3</td><td>51.0</td><td>72.5</td><td>27.0</td><td>82.2</td><td>36.0</td></tr>
+        <tr class="row-ours"><td>&nbsp;&nbsp;+ Meta-Ctrl (ours)</td><td>86.6</td><td>40.0</td><td>94.1</td><td>90.0</td><td>82.3</td><td>41.0</td><td>86.4</td><td class="best">66.0</td></tr>
       </tbody>
     </table>
   </div>
   <p class="tnote">
-    Adding token-level syntax (&gamma;) more than doubles the base model; adding action-level
-    semantics (&beta;) via meta-tokens lifts action-sequencing task success to <b>85.3%</b>,
-    above every closed and open baseline on the leaderboard.
+    On <b>Llama-3-8B</b>, Meta-Ctrl raises VH Action-Sequencing task SR from 21.3 to
+    <b>88.7</b> and Subgoal-Decomposition from 48.8 to <b>88.2</b>; on <b>gpt-oss-20B</b>
+    it raises VH AS from 74.4 to 86.6. Both exceed every model on the EAI leaderboard,
+    including o1-preview, Claude-3.5 Sonnet, and Mistral Large. The lift is smaller on
+    BEHAVIOR, where prompts encode fewer of the task's preconditions (24% vs 82% on VH),
+    so less of the constraint can be written into the DFA.
   </p>
 
   <div class="table-wrap" style="margin-top:36px;">
     <table>
-      <caption>Watch-And-Help (WAH-NL) under the LoTa-Bench protocol &mdash; natural-language goal, single agent, n=100. SR: full-task success; SSR: subgoal success.</caption>
+      <caption>Probabilistic lookahead vs.&nbsp;hard masking on Llama 3 8B (Task SR / Exec SR, %). Hard masking applies the syntactic DFA as a local mask each step (standard grammar-constrained decoding); Meta-Ctrl adds HMM backward-DP lookahead. Both enforce the same syntactic guarantee.</caption>
       <thead>
-        <tr><th>Method</th><th>Base LM</th><th>SR</th><th>SSR</th><th>Exec</th></tr>
+        <tr><th>Method (Llama 3 8B)</th><th>VH AS</th><th>VH SD</th><th>BEH AS</th><th>BEH SD</th></tr>
       </thead>
       <tbody>
-        <tr><td>STEP (prior SOTA)</td><td>larger</td><td>0.400</td><td>0.620</td><td>&ndash;</td></tr>
-        <tr><td>LoTa-Bench</td><td>LLaMA-1-65B</td><td>&ndash;</td><td>0.433</td><td>&ndash;</td></tr>
-        <tr><td>LoTa-Bench</td><td>GPT-4</td><td>&ndash;</td><td>0.342</td><td>&ndash;</td></tr>
-        <tr><td>ProgPrompt</td><td>&ndash;</td><td>0.030</td><td>0.187</td><td>&ndash;</td></tr>
-        <tr><td>SayCan</td><td>&ndash;</td><td>0.010</td><td>0.021</td><td>&ndash;</td></tr>
-        <tr class="group-row"><td colspan="5">Same LM (Llama-3.1-8B) + same evaluator + same n=100</td></tr>
-        <tr class="row-base"><td>Raw LLM (unconstrained)</td><td>Llama-3.1-8B</td><td>0.000</td><td>0.022</td><td>0.010</td></tr>
-        <tr class="row-base"><td>Likelihood-pick (LoTa-Bench)</td><td>Llama-3.1-8B</td><td>0.010</td><td>0.213</td><td>1.000</td></tr>
-        <tr class="row-ours"><td>Meta-Ctrl (ours)</td><td>Llama-3.1-8B</td><td class="best">0.470</td><td class="best">0.705</td><td class="best">1.000</td></tr>
+        <tr class="row-base"><td>Hard masking (&gamma; DFA)</td><td>1.4 / 97.3</td><td>0.0 / 96.0</td><td>12.0 / 20.0</td><td>19.0 / 31.0</td></tr>
+        <tr class="row-ours"><td>Meta-Ctrl (&gamma;+&beta;, ours)</td><td>88.7 / 95.7</td><td>88.2 / 92.0</td><td>34.0 / 64.0</td><td>36.0 / 53.0</td></tr>
+        <tr><td>&Delta; Task SR</td><td class="best">+87.3</td><td class="best">+88.2</td><td class="best">+22.0</td><td class="best">+17.0</td></tr>
       </tbody>
     </table>
   </div>
   <p class="tnote">
-    On WAH-NL, Meta-Ctrl reaches the highest reported subgoal success rate (0.705), exceeding
-    GPT-4 under the same protocol, with every plan executable by construction.
+    The guarantee is necessary but not sufficient. Hard masking achieves the same syntactic
+    validity yet collapses task success&mdash;greedy decoding steers to the shortest
+    constraint-satisfying continuation (high Exec, near-zero Task). Full-sequence
+    probabilistic lookahead recovers task success by +87 to +88 points on VirtualHome.
   </p>
 
-  <figure class="fig-narrow" style="margin-top:34px;">
-    <img src="assets/success_vs_budget.png" alt="Success rate vs lookahead budget." />
-    <figcaption>
-      <b>Probabilistic lookahead is the source of the gains.</b> Success rate as a function of
-      the lookahead budget: full-sequence reweighting (vs DFA-only hard masking) is what
-      converts validity into high-quality, goal-satisfying plans.
-    </figcaption>
-  </figure>
+  <div class="table-wrap" style="margin-top:36px;">
+    <table>
+      <caption>Watch-And-Help (WAH-NL), single-agent, n=100, under the LoTa-Bench protocol. SR: full-task success; SSR: subgoal success; Exec: executable-plan rate. External references use different LMs / executors (ballpark context). Same-LM rows are direct comparisons. &dagger;STEP is closed-loop; ours is open-loop.</caption>
+      <thead>
+        <tr><th>Method</th><th>Base LM</th><th>SR</th><th>SSR</th><th>Exec</th></tr>
+      </thead>
+      <tbody>
+        <tr class="group-row"><td colspan="5">External references (different LM / executor)</td></tr>
+        <tr><td>SayCan</td><td>&ndash;</td><td>0.010</td><td>0.021</td><td>&ndash;</td></tr>
+        <tr><td>ProgPrompt</td><td>&ndash;</td><td>0.030</td><td>0.187</td><td>&ndash;</td></tr>
+        <tr><td>LoTa-Bench</td><td>GPT-4</td><td>&ndash;</td><td>0.342</td><td>&ndash;</td></tr>
+        <tr><td>LoTa-Bench</td><td>LLaMA-1 65B</td><td>&ndash;</td><td>0.433</td><td>&ndash;</td></tr>
+        <tr><td>STEP&dagger;</td><td>(larger)</td><td>0.400</td><td>0.620</td><td>&ndash;</td></tr>
+        <tr class="group-row"><td colspan="5">Same LM (Llama 3.1 8B), same evaluator, n=100</td></tr>
+        <tr class="row-base"><td>Raw LM (unconstrained)</td><td>Llama 3.1 8B</td><td>0.000</td><td>0.022</td><td>0.010</td></tr>
+        <tr class="row-base"><td>+ syntax (&gamma;)</td><td>Llama 3.1 8B</td><td>0.000</td><td>0.037</td><td>0.010</td></tr>
+        <tr class="row-ours"><td>Meta-Ctrl (ours)</td><td>Llama 3.1 8B</td><td class="best">0.470</td><td class="best">0.705</td><td class="best">1.000</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">
+    On the SSR axis comparable across protocols, Meta-Ctrl (0.705) exceeds LoTa-Bench's
+    strongest reported configuration (LLaMA-1-65B 0.433; GPT-4 0.342) and the closed-loop
+    STEP baseline (0.620), with every plan executable by construction.
+  </p>
 </section>
 
 <!-- ================= REAL ROBOT ================= -->
 <section id="robot">
   <h2>Real Robot Demonstrations</h2>
   <p class="section-sub">
-    Eight tabletop tasks on a real XArm7 with a calibrated RGB-D camera. Every generated plan
-    satisfies its preconditions and goals by construction.
+    Meta-Ctrl deployed on a physical XArm7 with a calibrated RealSense RGB-D camera, composing
+    its plans with a Code-as-Policies executor (Molmo + SAM2 grounding, GraspGen grasps).
   </p>
   <figure>
-    <img src="assets/real-tasks.png" alt="Eight real-robot tabletop tasks executed with Meta-Ctrl plans." />
+    <img src="assets/real-tasks.png" alt="Real-robot tabletop tasks executed with Meta-Ctrl plans." />
     <figcaption>
-      Real tabletop tasks &mdash; set up breakfast table, put donut in canister, fetch the green
-      block, stack dishes by size, put dishes in dishwasher, fetch egg from fridge, clean dishes
-      with detergent, and place boxed objects in drawer. Plan-level goal success is bounded by
-      the perception and grasp pipeline rather than the planner.
+      Real robot setup with an xArm 7 and deployed tabletop manipulation tasks. Top-row tasks
+      require only pick-and-place; bottom-row tasks require specialized motion primitives
+      (e.g.&nbsp;open door). Eight BEHAVIOR-derived long-horizon tasks are demonstrated; three
+      pick-and-place tasks are evaluated end-to-end over 20 rollouts each.
     </figcaption>
   </figure>
-</section>
-
-<!-- ================= ANALYSIS ================= -->
-<section id="analysis">
-  <h2>Analysis</h2>
-  <p class="section-sub">
-    A grid search over the semantic guidance weight (&gamma; factor) trades off task success
-    against executability and error modes on EAI VirtualHome action sequencing.
-  </p>
-  <div class="table-wrap">
-    <table>
-      <caption>Lookahead-weight (g) sweep on VirtualHome Action Sequencing (%). DFA-only is hard masking; g&gt;0 adds probabilistic semantic lookahead.</caption>
-      <thead>
-        <tr><th>Config</th><th>Task SR</th><th>Exec SR</th><th>Missing step</th><th>Added step</th><th>Wrong order</th><th>Total goal</th></tr>
-      </thead>
-      <tbody>
-        <tr class="row-base"><td>Baseline</td><td>20.66</td><td>22.0</td><td>38.36</td><td>0.66</td><td>0.98</td><td>23.10</td></tr>
-        <tr><td>DFA-only</td><td class="best">38.36</td><td>39.7</td><td>58.36</td><td>17.38</td><td>1.64</td><td>48.18</td></tr>
-        <tr><td>g = 0.03</td><td>36.07</td><td>45.2</td><td>53.44</td><td>4.92</td><td>1.31</td><td>47.52</td></tr>
-        <tr><td>g = 0.05</td><td>36.72</td><td>49.8</td><td>49.51</td><td>3.61</td><td>0.66</td><td>48.02</td></tr>
-        <tr class="row-ours"><td>g = 0.06</td><td>37.05</td><td>51.5</td><td>47.54</td><td>2.95</td><td>0.98</td><td class="best">48.68</td></tr>
-        <tr><td>g = 0.10</td><td>21.97</td><td class="best">56.1</td><td>42.95</td><td>1.97</td><td>0.98</td><td>36.80</td></tr>
-      </tbody>
-    </table>
-  </div>
   <p class="tnote">
-    DFA-only masking maximizes raw task success but inflates added/redundant steps; adding
-    probabilistic semantic lookahead steadily raises executability and reduces missing-step and
-    redundant-action errors, with an intermediate weight giving the best overall goal score.
+    Meta-Ctrl achieves <b>100% plan validity by construction</b> on all tasks, including the
+    multi-step precondition sequences for articulated containers. Its remaining failures occur
+    downstream of a valid plan (perception or grasp), which isolates cleanly from planning.
+    Example &mdash; <em>put donut into canister</em>: planning 20/20, perception 17/20,
+    execution 13/17; the unconstrained baseline fails at planning (1/20).
   </p>
 </section>
 
